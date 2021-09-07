@@ -7,6 +7,34 @@ class Domain:
         self.__values = values[:] if values else []
         self.__connected_vars = []
 
+    @property
+    def name(self):
+        return self.__name
+
+    @name.setter
+    def name(self, name):
+        if not name or not name.strip():
+            raise ValueError("Необходимо указать имя домена")
+        if name.upper().strip() != self.name and self.used:
+            raise UsedDomainError("Домен уже используется, поэтому его нельзя изменять")
+        self.__name = name.upper().strip()
+
+    @property
+    def connected_vars(self):
+        return self.__connected_vars
+
+    @property
+    def values(self):
+        return self.__values
+
+    @values.setter
+    def values(self, values):
+        self.__values = values
+
+    @property
+    def used(self):
+        return len(self.connected_vars) != 0
+
     def __eq__(self, other):
         if type(other) != type(self):
             return False
@@ -25,65 +53,29 @@ class Domain:
     def __str__(self):
         return self.name + ":\n" + "\n".join(map(str, self.values))
 
-    @property
-    def name(self):
-        return self.__name
-
-    @name.setter
-    def name(self, name):
-        if name is not None and name != "":
-            if name != self.name and self.used:
-                raise UsedDomainError("Домен уже используется, поэтому его нельзя изменять")
-            self.__name = name.upper().strip()
-        else:
-            raise ValueError("Необходимо указать имя домена")
-
-    @property
-    def connected_vars(self):
-        return self.__connected_vars
-
-    @property
-    def values(self):
-        return self.__values
-
-    @values.setter
-    def values(self, values):
-        self.__values = values
-
-    @property
-    def used(self):
-        return len(self.connected_vars) != 0
-
     def add_value(self, value):
         value = str(value).upper().strip()
-        res = value in self.values
-        if not res:
-            if self.used:
-                raise UsedDomainError("Домен уже используется, поэтому его нельзя изменять")
-            self.values.append(value)
-        return res
+        if value in self.values:
+            raise ValueError("Попытка добавить в домен существующее значение")
+        if self.used:
+            raise UsedDomainError("Домен уже используется, поэтому его нельзя изменять")
+        self.values.append(value)
 
     def remove_value(self, value):
         value = str(value).upper().strip()
-        value_exist = value in self.values
-        if value_exist:
-            if self.used:
-                raise UsedDomainError("Домен уже используется, поэтому его нельзя изменять")
-            self.values.remove(value)
-        return value_exist
+        if self.used:
+            raise UsedDomainError("Домен уже используется, поэтому его нельзя изменять")
+        self.values.remove(value)
 
     def connect_var(self, var):
-        if var is not None and var.name != "":
-            self.connected_vars.append(var)
-        else:
+        if not var or not var.name.strip():
             raise ValueError("Необходимо указать имя переменной")
+        self.connected_vars.append(var)
 
     def remove_var(self, var):
-        if var is not None and var.name != "":
-            if var in self.connected_vars:
-                self.connected_vars.remove(var)
-                var.domain = []
-            else:
-                raise ValueError("Попытка удалить переменную, которая не связана с доменом")
-        else:
+        if not var or not var.name.strip():
             raise ValueError("Необходимо указать имя переменной")
+        if var not in self.connected_vars:
+            raise ValueError("Попытка удалить переменную, которая не связана с доменом")
+        self.connected_vars.remove(var)
+        var.domain = []
