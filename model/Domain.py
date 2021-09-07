@@ -1,6 +1,4 @@
 from model.exceptions.UsedDomainError import UsedDomainError
-from model.Var import Var
-from model.types.VarType import VarType
 
 
 class Domain:
