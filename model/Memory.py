@@ -67,25 +67,25 @@ class Memory:
 
     def add_rule(self, rule):
         self.__rules_dict[rule.name] = rule
-        self.__rules.append(rule)
+        self.rules.append(rule)
 
     def insert_rule(self, rule, pos):
         if not rule:
             raise ValueError("Попытка вставить правило, которого нет")
-        if rule in self.__rules:
+        if rule in self.rules:
             raise ValueError("Попытка вставить правило, которое уже есть")
         self.__rules_dict[rule.name] = rule
-        self.__rules.insert(pos, rule)
+        self.rules.insert(pos, rule)
 
     def swap_rules(self, pos_from, pos_to):
-        if pos_from < 0 or pos_to >= len(self.__rules):
+        if pos_from < 0 or pos_to >= len(self.rules):
             raise ValueError("Неправильные индексы для перестановки правил")
-        temp = self.__rules[pos_from]
-        self.__rules[pos_from] = self.__rules[pos_to]
-        self.__rules[pos_to] = temp
+        temp = self.rules[pos_from]
+        self.rules[pos_from] = self.rules[pos_to]
+        self.rules[pos_to] = temp
 
     def get_rule_index(self, name):
-        return self.__rules.index(name.upper().strip())
+        return self.rules.index(name.upper().strip())
 
     def get_rule_by_name(self, name):
         if not name or not name.strip():
@@ -94,13 +94,13 @@ class Memory:
         return self.__rules_dict[name]
 
     def remove_rule(self, rule):
-        if rule not in self.__rules:
+        if rule not in self.rules:
             raise ValueError("Попытка удалить правило, которого нет")
         for reason in rule.reasons:
             reason.var.remove_fact(reason)
         for conclusion in rule.conclusions:
             conclusion.var.remove_fact(conclusion)
-        self.__rules.remove(rule)
+        self.rules.remove(rule)
         self.__rules_dict.pop(rule.name)
 
     def add_active_rule(self, rule):
@@ -127,7 +127,7 @@ class Memory:
 
     def add_var(self, var):
         self.__vars_dict[var.getName()] = var
-        self.__vars.append(var)
+        self.vars.append(var)
 
     def get_var_by_name(self, name):
         if not name or not name.strip():
@@ -136,17 +136,17 @@ class Memory:
         return self.__vars_dict[name]
 
     def remove_var(self, var):
-        if var not in self.__vars:
+        if var not in self.vars:
             raise ValueError("Попытка удалить переменную, которой нет")
         if var.used:
             raise ValueError("Попытка удалить переменную, которая уже используется")
         var.domain.remove_var(var)
-        self.__vars.remove(var)
+        self.vars.remove(var)
         self.__vars_dict.pop(var.name)
 
     def add_domain(self, domain):
         self.__domains_dict[domain.name] = domain
-        self.__domains.append(domain)
+        self.domains.append(domain)
 
     def get_domain_by_name(self, name):
         if not name or not name.strip():
@@ -155,11 +155,11 @@ class Memory:
         return self.__domains_dict[name]
 
     def remove_domain(self, domain):
-        if domain not in self.__domains:
+        if domain not in self.domains:
             raise ValueError("Попытка удалить домен, которого нет")
         if domain.used:
             raise ValueError("Данный домен уже используется")
-        self.__domains.remove(domain)
+        self.domains.remove(domain)
         self.__domains_dict.pop(domain.name)
 
     def update_dicts(self):
