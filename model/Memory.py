@@ -35,8 +35,8 @@ class Memory:
 
     @active_rules.setter
     def active_rules(self, rules):
-        if not rules:
-            raise ValueError("Попытка установить пустой список активных правил")
+        if not isinstance(rules, list):
+            raise ValueError("Попытка установить список активных правил не списком")
         self.__active_rules = rules
 
     def add_var_with_value(self, var, value):
@@ -108,16 +108,16 @@ class Memory:
             raise ValueError("Попытка добавить правило, которое не создано")
         if rule in self.active_rules:
             raise ValueError("Попытка добавить уже активное правило")
-        self.__active_rules.append(rule)
+        self.active_rules.append(rule)
 
     def insert_active_rule(self, rule, pos):
         if not rule:
             raise ValueError("Попытка вставить правило, которого нет")
         if rule in self.active_rules:
             raise ValueError("Попытка вставить уже активное правило")
-        self.__active_rules.insert(pos, rule)
+        self.active_rules.insert(pos, rule)
 
-    def delete_active_rule(self, rule):
+    def remove_active_rule(self, rule):
         if not rule:
             raise ValueError("Попытка удалить правило, которого нет")
         self.active_rules.remove(rule)
