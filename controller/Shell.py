@@ -8,6 +8,14 @@ class Shell:
     def consult(self):
         pass
 
+    def load(self, path):
+        if not path or not path.strip():
+            raise ValueError('Не найден файл с БЗ')
+        self.__model.load(path)
+
+    def backup(self, path):
+        pass
+
     def __take_goal(self):
         pass
 

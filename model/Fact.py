@@ -11,7 +11,7 @@ class Fact:
     @var.setter
     def var(self, var):
         if not var:
-            raise ValueError("Попытка присвоить пустую переменную")
+            raise ValueError('Попытка присвоить пустую переменную')
         self.__var.remove_fact(self)
         self.__var = var
         var.connect_fact(self)
@@ -23,7 +23,7 @@ class Fact:
     @value.setter
     def value(self, value):
         if not value:
-            raise ValueError("Попытка присвоить пустое значение")
+            raise ValueError('Попытка присвоить пустое значение')
         self.__value = value
 
     @property
@@ -32,11 +32,11 @@ class Fact:
 
     def __str__(self):
         if self.__var and self.value:
-            return "{} = '{}'".format(self.var.name, self.value)
-        return ""
+            return f'{self.var.name} = {self.value}'
+        return ''
 
     def __eq__(self, other):
-        if other is not None and type(other) == "Fact":
+        if other is not None and type(other) == 'Fact':
             return self.var == other.var and self.value == other.value
 
     def __ne__(self, other):

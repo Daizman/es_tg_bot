@@ -36,7 +36,7 @@ class Memory:
     @active_rules.setter
     def active_rules(self, rules):
         if not isinstance(rules, list):
-            raise ValueError("Попытка установить список активных правил не списком")
+            raise ValueError('Попытка установить список активных правил не списком')
         self.__active_rules = rules
 
     def add_var_with_value(self, var, value):
@@ -71,15 +71,15 @@ class Memory:
 
     def insert_rule(self, rule, pos):
         if not rule:
-            raise ValueError("Попытка вставить правило, которого нет")
+            raise ValueError('Попытка вставить правило, которого нет')
         if rule in self.rules:
-            raise ValueError("Попытка вставить правило, которое уже есть")
+            raise ValueError('Попытка вставить правило, которое уже есть')
         self.__rules_dict[rule.name] = rule
         self.rules.insert(pos, rule)
 
     def swap_rules(self, pos_from, pos_to):
         if pos_from < 0 or pos_to >= len(self.rules):
-            raise ValueError("Неправильные индексы для перестановки правил")
+            raise ValueError('Неправильные индексы для перестановки правил')
         temp = self.rules[pos_from]
         self.rules[pos_from] = self.rules[pos_to]
         self.rules[pos_to] = temp
@@ -89,13 +89,13 @@ class Memory:
 
     def get_rule_by_name(self, name):
         if not name or not name.strip():
-            raise ValueError("Попытка получить правило с пустым именем")
+            raise ValueError('Попытка получить правило с пустым именем')
         name = name.upper().strip()
         return self.__rules_dict[name]
 
     def remove_rule(self, rule):
         if rule not in self.rules:
-            raise ValueError("Попытка удалить правило, которого нет")
+            raise ValueError('Попытка удалить правило, которого нет')
         for reason in rule.reasons:
             reason.var.remove_fact(reason)
         for conclusion in rule.conclusions:
@@ -105,21 +105,21 @@ class Memory:
 
     def add_active_rule(self, rule):
         if not rule:
-            raise ValueError("Попытка добавить правило, которое не создано")
+            raise ValueError('Попытка добавить правило, которое не создано')
         if rule in self.active_rules:
-            raise ValueError("Попытка добавить уже активное правило")
+            raise ValueError('Попытка добавить уже активное правило')
         self.active_rules.append(rule)
 
     def insert_active_rule(self, rule, pos):
         if not rule:
-            raise ValueError("Попытка вставить правило, которого нет")
+            raise ValueError('Попытка вставить правило, которого нет')
         if rule in self.active_rules:
-            raise ValueError("Попытка вставить уже активное правило")
+            raise ValueError('Попытка вставить уже активное правило')
         self.active_rules.insert(pos, rule)
 
     def remove_active_rule(self, rule):
         if not rule:
-            raise ValueError("Попытка удалить правило, которого нет")
+            raise ValueError('Попытка удалить правило, которого нет')
         self.active_rules.remove(rule)
 
     def clear_active_rules(self):
@@ -131,15 +131,15 @@ class Memory:
 
     def get_var_by_name(self, name):
         if not name or not name.strip():
-            raise ValueError("Попытка получить переменную с пустым именем")
+            raise ValueError('Попытка получить переменную с пустым именем')
         name = name.upper().strip()
         return self.__vars_dict[name]
 
     def remove_var(self, var):
         if var not in self.vars:
-            raise ValueError("Попытка удалить переменную, которой нет")
+            raise ValueError('Попытка удалить переменную, которой нет')
         if var.used:
-            raise ValueError("Попытка удалить переменную, которая уже используется")
+            raise ValueError('Попытка удалить переменную, которая уже используется')
         var.domain.remove_var(var)
         self.vars.remove(var)
         self.__vars_dict.pop(var.name)
@@ -150,15 +150,15 @@ class Memory:
 
     def get_domain_by_name(self, name):
         if not name or not name.strip():
-            raise ValueError("Попытка получить домен с пустым именем")
+            raise ValueError('Попытка получить домен с пустым именем')
         name = name.upper().strip()
         return self.__domains_dict[name]
 
     def remove_domain(self, domain):
         if domain not in self.domains:
-            raise ValueError("Попытка удалить домен, которого нет")
+            raise ValueError('Попытка удалить домен, которого нет')
         if domain.used:
-            raise ValueError("Данный домен уже используется")
+            raise ValueError('Данный домен уже используется')
         self.domains.remove(domain)
         self.__domains_dict.pop(domain.name)
 

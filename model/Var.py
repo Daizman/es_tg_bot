@@ -3,9 +3,9 @@ from model.exceptions.UsedVarError import UsedVarError
 
 
 class Var:
-    def __init__(self, name, domain, question="", var_type=VarType.REQUESTED):
+    def __init__(self, name, domain, question='', var_type=VarType.REQUESTED):
         self.__name = name.upper().strip()
-        self.__question = question.strip() if question else self.__name + "?"
+        self.__question = question.strip() if question else f'{self.__name}?'
         self.__var_type = var_type
         self.__facts = []
         self.__domain = domain
@@ -18,11 +18,11 @@ class Var:
     @name.setter
     def name(self, name):
         if not name or not name.strip():
-            raise ValueError("Переменной нельзя присвоить пустое имя")
+            raise ValueError('Переменной нельзя присвоить пустое имя')
         if name.upper().strip() != self.name and self.used:
-            raise UsedVarError("Переменная уже используется, поэтому ее нельзя изменять")
+            raise UsedVarError('Переменная уже используется, поэтому ее нельзя изменять')
         self.__name = name.upper().strip()
-        self.question = self.__name + "?"
+        self.question = f'{self.__name}?'
 
     @property
     def domain(self):
@@ -31,9 +31,9 @@ class Var:
     @domain.setter
     def domain(self, domain):
         if not domain:
-            raise ValueError("Переменной нельзя присвоить пустой домен")
+            raise ValueError('Переменной нельзя присвоить пустой домен')
         if domain != self.domain and self.used:
-            raise UsedVarError("Переменная уже используется, поэтому ее нельзя изменять")
+            raise UsedVarError('Переменная уже используется, поэтому ее нельзя изменять')
         self.__domain = domain
 
     @property
@@ -43,9 +43,9 @@ class Var:
     @question.setter
     def question(self, question):
         if not question and not question.strip():
-            raise ValueError("Нельзя установить пустой вопрос")
+            raise ValueError('Нельзя установить пустой вопрос')
         if question.strip() != self.question and self.used:
-            raise UsedVarError("Переменная уже используется, поэтому ее нельзя изменять")
+            raise UsedVarError('Переменная уже используется, поэтому ее нельзя изменять')
         self.__question = question.strip()
 
     @property
@@ -59,20 +59,20 @@ class Var:
     @var_type.setter
     def var_type(self, var_type):
         if not var_type or not isinstance(var_type, VarType):
-            raise ValueError("Попытка присвоить неверный тип переменной")
+            raise ValueError('Попытка присвоить неверный тип переменной')
         if self.used:
-            raise UsedVarError("Переменная уже используется, поэтому ее нельзя изменять")
+            raise UsedVarError('Переменная уже используется, поэтому ее нельзя изменять')
         self.__var_type = var_type
-        self.question = self.__name + "?"
+        self.question = f'{self.__name}?'
 
     @property
     def var_type_str(self):
         if self.var_type == VarType.REQUESTED:
-            return "Запрашиваемая"
+            return 'Запрашиваемая'
         elif self.var_type == VarType.INFERRED:
-            return "Выводимая"
+            return 'Выводимая'
         else:
-            return "Запрашиваемо-выводимая"
+            return 'Запрашиваемо-выводимая'
 
     @property
     def used(self):
@@ -88,19 +88,22 @@ class Var:
         return not self.__eq__(other)
 
     def __str__(self):
-        return f"Name: {self.name};\nDomain: {self.domain};\nQuestion: {self.question};\nType: {self.var_type_str}"
+        return f'Name: {self.name};' \
+               f'\nDomain: {self.domain};' \
+               f'\nQuestion: {self.question};' \
+               f'\nType: {self.var_type_str}'
 
     def used_in_fact(self, fact):
         return fact in self.__facts
 
     def connect_fact(self, fact):
         if not fact:
-            raise ValueError("Попытка добавить пустой факт")
+            raise ValueError('Попытка добавить пустой факт')
         if fact in self.facts:
-            raise ValueError("Попытка добавить существующий в связках факт")
+            raise ValueError('Попытка добавить существующий в связках факт')
         self.__facts.append(fact)
 
     def remove_fact(self, fact):
         if not fact:
-            raise ValueError("Попытка удалить пустой факт")
+            raise ValueError('Попытка удалить пустой факт')
         self.__facts.remove(fact)

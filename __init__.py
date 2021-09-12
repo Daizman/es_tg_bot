@@ -4,11 +4,12 @@ import nltk
 import re
 import pymorphy2
 from nltk.corpus import stopwords as nltk_sw
-from telebot import types
+from controller.Shell import Shell
 
 
 API_TOKEN = os.getenv('API_TOKEN')
 bot = telebot.TeleBot(API_TOKEN)
+shell = Shell()
 
 
 def print_help(chat_id):
@@ -22,11 +23,10 @@ def print_help(chat_id):
 def tokenize(message):
     morph = pymorphy2.MorphAnalyzer()
     sw = nltk_sw.words('russian')
-    tokens = [word for sent in nltk.sent_tokenize(message)
-              for word in nltk.word_tokenize(sent)
-              if len(word) >= 3 and word not in sw]
-    return [morph.parse(token)[0].normal_form
-            for token in tokens if re.search(r'[\w\d]+', token)]
+    return [morph.parse(word)[0].normal_form
+            for sent in nltk.sent_tokenize(message)
+            for word in nltk.word_tokenize(sent)
+            if len(word) >= 3 and re.search(r'[\w\d]+', word) and word not in sw]
 
 
 default_handlers = {
@@ -48,5 +48,3 @@ def text_messages_handler(message):
 
 
 bot.polling(none_stop=True, interval=0)
-
-

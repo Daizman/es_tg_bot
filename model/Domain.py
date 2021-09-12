@@ -14,9 +14,9 @@ class Domain:
     @name.setter
     def name(self, name):
         if not name or not name.strip():
-            raise ValueError("Необходимо указать имя домена")
+            raise ValueError('Необходимо указать имя домена')
         if name.upper().strip() != self.name and self.used:
-            raise UsedDomainError("Домен уже используется, поэтому его нельзя изменять")
+            raise UsedDomainError('Домен уже используется, поэтому его нельзя изменять')
         self.__name = name.upper().strip()
 
     @property
@@ -51,31 +51,31 @@ class Domain:
         return not self.__eq__(other)
 
     def __str__(self):
-        return self.name + ":\n" + "\n".join(map(str, self.values))
+        return self.name + ':\n' + '\n'.join(map(str, self.values))
 
     def add_value(self, value):
         value = str(value).upper().strip()
         if value in self.values:
-            raise ValueError("Попытка добавить в домен существующее значение")
+            raise ValueError('Попытка добавить в домен существующее значение')
         if self.used:
-            raise UsedDomainError("Домен уже используется, поэтому его нельзя изменять")
+            raise UsedDomainError('Домен уже используется, поэтому его нельзя изменять')
         self.values.append(value)
 
     def remove_value(self, value):
         value = str(value).upper().strip()
         if self.used:
-            raise UsedDomainError("Домен уже используется, поэтому его нельзя изменять")
+            raise UsedDomainError('Домен уже используется, поэтому его нельзя изменять')
         self.values.remove(value)
 
     def connect_var(self, var):
         if not var or not var.name.strip():
-            raise ValueError("Необходимо указать имя переменной")
+            raise ValueError('Необходимо указать имя переменной')
         self.connected_vars.append(var)
 
     def remove_var(self, var):
         if not var or not var.name.strip():
-            raise ValueError("Необходимо указать имя переменной")
+            raise ValueError('Необходимо указать имя переменной')
         if var not in self.connected_vars:
-            raise ValueError("Попытка удалить переменную, которая не связана с доменом")
+            raise ValueError('Попытка удалить переменную, которая не связана с доменом')
         self.connected_vars.remove(var)
         var.domain = []
