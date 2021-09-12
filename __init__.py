@@ -1,6 +1,9 @@
 import telebot
 import os
 import nltk
+import re
+import pymorphy2
+from nltk.corpus import stopwords as nltk_sw
 from telebot import types
 
 
@@ -16,25 +19,34 @@ def print_help(chat_id):
                               'задам уточняющие вопросы.')
 
 
-def parse_message():
-    pass
+def tokenize(message):
+    morph = pymorphy2.MorphAnalyzer()
+    sw = nltk_sw.words('russian')
+    tokens = [word for sent in nltk.sent_tokenize(message)
+              for word in nltk.word_tokenize(sent)
+              if len(word) >= 3 and word not in sw]
+    return [morph.parse(token)[0].normal_form
+            for token in tokens if re.search(r'[\w\d]+', token)]
 
 
 default_handlers = {
-    'HELP': print_help,
-    '/HELP': print_help,
-    'ЧТО ТЫ МОЖЕШЬ?': print_help,
-    'ЧТО ТЫ УМЕЕШЬ?': print_help,
-    'ПРИВЕТ': print_help
+    'help': print_help,
+    '/help': print_help,
+    'что ты можешь?': print_help,
+    'что ты умеешь?': print_help,
+    'привет': print_help
 }
 
 
 @bot.message_handler(content_types=['text'])
 def text_messages_handler(message):
-    message = message.strip().upper()
+    message = message.strip().lower()
     if message in default_handlers.keys():
         default_handlers[message](message.chat.id)
         return True
+    message_tokens = tokenize(message.text)
 
 
 bot.polling(none_stop=True, interval=0)
+
+
