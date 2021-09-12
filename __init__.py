@@ -1,46 +1,40 @@
 import telebot
-from telebot import types
 import os
+import nltk
+from telebot import types
 
 
 API_TOKEN = os.getenv('API_TOKEN')
 bot = telebot.TeleBot(API_TOKEN)
 
 
-# commands=[список_придуманных_команд_типа_/команда], регистр важен
-@bot.message_handler(commands=['Greet'])
-def greet(message):
-    bot.reply_to(message, 'Hi, how are you?')  # использует "Ответ" для сообщения пользователю
+def print_help(chat_id):
+    bot.send_message(chat_id, 'Привет, я бот созданный для консультации по вопросам, связанным '
+                              'с поиском ТЗ, инструкций и других документов. Задай мне вопрос, '
+                              'в котором укажи кто ты (разработчик/аналитик/тестировщик/оператор), '
+                              'и что ты ищешь, а дальше я постараюсь найти нужную тебе статью или '
+                              'задам уточняющие вопросы.')
+
+
+def parse_message():
+    pass
+
+
+default_handlers = {
+    'HELP': print_help,
+    '/HELP': print_help,
+    'ЧТО ТЫ МОЖЕШЬ?': print_help,
+    'ЧТО ТЫ УМЕЕШЬ?': print_help,
+    'ПРИВЕТ': print_help
+}
 
 
 @bot.message_handler(content_types=['text'])
-def get_text_messages(message):
-    if 'HELP' in message.text.strip().upper():
-        print_help(message.chat.id)
-    if message.text == 'Привет':
-        bot.send_message(message.chat.id, 'Hi, can I help you?')
-    else:
-        bot.send_message(message.chat.id, 'Use /help')
-
-
-def test_rq(message):
-    request = message.text.split()
-    return True
-
-
-@bot.message_handler(func=test_rq)
-def send_ans_for_rq(message):
-    pass
-
-
-def print_help(chat_id):
-    pass
-
-
-@bot.message_handler(commands=['help, Help'])
-def help_handler(message):
-    print_help(message.chat.id)
+def text_messages_handler(message):
+    message = message.strip().upper()
+    if message in default_handlers.keys():
+        default_handlers[message](message.chat.id)
+        return True
 
 
 bot.polling(none_stop=True, interval=0)
-
