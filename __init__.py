@@ -15,6 +15,8 @@ def greet(message):
 
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
+    if 'HELP' in message.text.strip().upper():
+        print_help(message.chat.id)
     if message.text == 'Привет':
         bot.send_message(message.chat.id, 'Hi, can I help you?')
     else:
@@ -29,6 +31,15 @@ def test_rq(message):
 @bot.message_handler(func=test_rq)
 def send_ans_for_rq(message):
     pass
+
+
+def print_help(chat_id):
+    pass
+
+
+@bot.message_handler(commands=['help, Help'])
+def help_handler(message):
+    print_help(message.chat.id)
 
 
 bot.polling(none_stop=True, interval=0)

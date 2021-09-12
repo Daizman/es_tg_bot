@@ -6,7 +6,7 @@ from model.Rule import Rule
 from model.types.VarType import VarType
 
 
-class ExpertSystem:
+class Shell:
     def __init__(self, name):
         self.__name = name.upper().strip()
         self.__memory = Memory()
